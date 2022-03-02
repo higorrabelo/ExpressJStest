@@ -1,28 +1,38 @@
 const express = require("express");
-const App = express();
+const app = express();
 
-App.get("/",function(req,resp){
-    resp.send("<h1>Primeira Página</h1>");
-});
+var port =8080;
 
-App.get("/quemsomos/:nome?",function(req,resp){
+app.set('view engine','ejs');
+
+app.get("/:nome?/:lang?",(req,resp)=>{
     var nome = req.params.nome;
-    if(nome){
-        resp.send("<h1>Quem Somos e o que podemos fazer por sua empresa</h1>"+nome);
-    }else{
-        resp.send("<h1>Quem Somos e o que podemos fazer por sua empresa</h1>");
-    }
-    
+    var lang = req.params.lang;
+    var exibirMsg = false;
+
+    var produtos = [
+        {nome:"Guitarra",preco:3000},
+        {nome:"Baixo",preco:2000},
+        {nome:"Microfone",preco:1000},
+        {nome:"Bateria",preco:5000}
+    ];
+
+    resp.render("index",{
+        nome: nome,
+        lang: lang,
+        empresa: "Higor Inc",
+        inscritos: 8000,
+        msg: exibirMsg,
+        produtos : produtos
+    });
 });
 
-App.get("/contato",function(req,resp){
-    resp.send("<h1>Nosso Contato</h1>");
-})
-
-App.listen(8080,function(erro){
-    if(erro){
-        console.log("Erro no Carregamento do Servidor");
-    }else{
-        console.log("Serivor On Line");
-    }
+app.get("/home",function(req,resp){
+    resp.render("home");
 });
+
+app.get("/perfil",function(req,resp){
+    resp.render("principal/perfil");
+});
+
+app.listen(port,()=>{console.log("Servidor Rodando")});
