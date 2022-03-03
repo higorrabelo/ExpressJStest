@@ -1,38 +1,26 @@
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
 
 var port =8080;
 
 app.set('view engine','ejs');
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({extend:false}));
+app.use.apply(bodyParser.json());
 
-app.get("/:nome?/:lang?",(req,resp)=>{
-    var nome = req.params.nome;
-    var lang = req.params.lang;
-    var exibirMsg = false;
-
-    var produtos = [
-        {nome:"Guitarra",preco:3000},
-        {nome:"Baixo",preco:2000},
-        {nome:"Microfone",preco:1000},
-        {nome:"Bateria",preco:5000}
-    ];
-
-    resp.render("index",{
-        nome: nome,
-        lang: lang,
-        empresa: "Higor Inc",
-        inscritos: 8000,
-        msg: exibirMsg,
-        produtos : produtos
-    });
+app.get("/",(req,resp)=>{
+    resp.render("index");
 });
 
-app.get("/home",function(req,resp){
-    resp.render("home");
+app.get("/perguntar",(req,resp)=>{
+    resp.render("perguntar");
 });
 
-app.get("/perfil",function(req,resp){
-    resp.render("principal/perfil");
+app.post("/salvarpergunta",(req,resp)=>{
+    var titulo = req.body.titulo;
+    var descricao = req.body.descricao;
+    resp.send("Formulário Recebido");
 });
 
 app.listen(port,()=>{console.log("Servidor Rodando")});
