@@ -3,6 +3,12 @@
     <%- include('partials/navbar.ejs')%>
         <h1>Estilo Bootstrap</h1>
 
+        <% perguntas.forEach((pergunta)=>{%>
+
+            <p><%= pergunta.titulo %></p>
+            <p><%= pergunta.descricao %></p>
+
+        <%})%>
 
     </body>
 <%- include('partials/footer.ejs')%>
