@@ -1,14 +1,29 @@
 <%- include('partials/header.ejs')%>
     <body>
     <%- include('partials/navbar.ejs')%>
-        <h1>Estilo Bootstrap</h1>
-
+        
+        <div class="container">
+            <h1>Perguntas</h1>
+            <br>
+            <a class="btn btn-primary" href="/perguntar">Fazer Pergunta</a>
+            <br><br>
         <% perguntas.forEach((pergunta)=>{%>
 
-            <p><%= pergunta.titulo %></p>
-            <p><%= pergunta.descricao %></p>
+            <div class="card">
+                
+                <div class="card-header">
+                    <h4><%= pergunta.titulo %></h4><i><%= new Intl.DateTimeFormat('pt-BR').format(pergunta.createdAt)%></i>
+                </div>
+                <div class="card-body">
+                    <i><%= pergunta.descricao %></i>
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-primary" href="/pergunta/<%=pergunta.id%>">Responder</a>
+                </div>
+
+            </div>    
 
         <%})%>
-
+        </div>
     </body>
 <%- include('partials/footer.ejs')%>

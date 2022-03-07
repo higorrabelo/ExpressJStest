@@ -4,6 +4,9 @@ const bodyParser = require("body-parser");
 const connection = require("./database/database");
 const Pergunta = require("./database/Perguntas");
 const port =8080;
+const func = ()=>{console.log("Servidor Rodando")};
+const Respsota = require("./database/Resposta");
+const Resposta = require("./database/Resposta");
 
 connection.authenticate().then(()=>{
     console.log("Conexão Com o Banco de Dados Realizada")
@@ -18,7 +21,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 app.get("/",(req,resp)=>{
-    Pergunta.findAll({raw : true}).then((perguntas)=>{
+    Pergunta.findAll({raw : true, order:[
+        ['id','DESC']
+    ]}).then((perguntas)=>{
         resp.render("index",{
             perguntas: perguntas
         });
@@ -41,4 +46,37 @@ app.post("/salvarpergunta",(req,resp)=>{
     });
 });
 
-app.listen(port,()=>{console.log("Servidor Rodando")});
+app.get("/pergunta/:id",(req,resp)=>{
+    var id = req.params.id;
+    Pergunta.findOne({
+        where: {id: id}
+    }).then(pergunta=>{
+        if(pergunta!=undefined){
+
+            Resposta.findAll({
+                where: {perguntaId: pergunta.id},
+                order: [['id','desc']]
+            }).then(respostas => {
+                resp.render("pergunta",{
+                pergunta: pergunta,
+                respostas: respostas
+                });
+            });
+        }else{
+            resp.redirect("/");
+        }
+    });
+});
+
+app.post("/responder",(req,resp)=>{
+    var perguntaId = req.body.perguntaId;
+    var corpo = req.body.corpo;
+     Resposta.create({
+        perguntaId: perguntaId,
+        corpo: corpo 
+    }).then(()=>{
+        resp.redirect("/pergunta/"+perguntaId);
+    });  
+});
+
+app.listen(port,func);

@@ -1,0 +1,37 @@
+<%- include('partials/header.ejs')%>
+    <body>
+    <%- include('partials/navbar.ejs')%>
+        
+        <div class="container">
+         <hr>
+            <div class="card">
+                <div class="card-header">
+                    <h3><%= pergunta.titulo%></h3>
+                </div>
+                <div class="card-body">
+                    <%= pergunta.descricao%>
+                </div>
+            </div>
+            <hr>
+            <form action="/responder" method="POST">
+                <h4>Responda</h4>
+                <input type="hidden" name="perguntaId" value="<%= pergunta.id %>">
+                <textarea class="form-control" rows="10" name="corpo" placeholder="Digite sua Resposta"></textarea><br><br>
+                <a class="d-flex justify-content-center"><button type="submit" class="btn btn-primary">Responder</button></a>
+            </form>
+            <h3>Respostas</h3>
+            <hr>
+            <% respostas.forEach(resposta => {%>
+                <br>
+                <div class="card">
+                    <div class="card-header">Enviada no dia <i><%= new Intl.DateTimeFormat('pt-BR').format(resposta.createdAt)%> </div>     
+                    <div class="card-body">
+                        <%= resposta.corpo %>
+                    </div>
+                </div>
+
+            <%})%>
+
+        </div>
+    </body>
+<%- include('partials/footer.ejs')%>
